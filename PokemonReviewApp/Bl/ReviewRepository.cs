@@ -9,6 +9,8 @@ namespace PokemonReviewApp.Bl
         Review GetReview(int reviewId);
         ICollection<Review> GetReviewsOfAPokemon(int pokeId);
         bool ReviewExists(int reviewId);
+        bool CreateReview(Review review);
+        bool save();
     }
     public class ReviewRepository: IReviewRepository
     {
@@ -16,6 +18,13 @@ namespace PokemonReviewApp.Bl
         public ReviewRepository(DataContext context)
         {
             _context = context;
+        }
+
+        public bool CreateReview(Review review)
+        {
+
+            _context.Add(review);
+            return save();
         }
 
         public Review GetReview(int reviewId)
@@ -36,6 +45,12 @@ namespace PokemonReviewApp.Bl
         public bool ReviewExists(int reviewId)
         {
             return _context.Reviews.Any(x => x.Id == reviewId);
+        }
+
+        public bool save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }

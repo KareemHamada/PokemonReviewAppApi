@@ -10,6 +10,10 @@ namespace PokemonReviewApp.Bl
         Country GetCountryByOwner(int ownerId);
         ICollection<Owner> GetOwnersFromCountry(int countryId);
         bool CountryExists(int id);
+
+        bool CreateCountry(Country country);
+        bool UpdateCountry(Country country);
+        bool Save();
     }
     public class CountryRepository : ICountryRepositroy
     {
@@ -21,6 +25,12 @@ namespace PokemonReviewApp.Bl
         public bool CountryExists(int id)
         {
             return _context.Countries.Any(x => x.Id == id);
+        }
+
+        public bool CreateCountry(Country country)
+        {
+            _context.Add(country);
+            return Save();
         }
 
         public ICollection<Country> GetCountries()
@@ -41,6 +51,18 @@ namespace PokemonReviewApp.Bl
         public ICollection<Owner> GetOwnersFromCountry(int countryId)
         {
             return _context.Owners.Where(x => x.Country.Id == countryId).ToList();
+        }
+
+        public bool Save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
+        }
+
+        public bool UpdateCountry(Country country)
+        {
+            _context.Update(country);
+            return Save();
         }
     }
 }

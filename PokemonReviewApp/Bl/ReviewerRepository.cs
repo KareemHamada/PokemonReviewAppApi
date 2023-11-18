@@ -9,7 +9,9 @@ namespace PokemonReviewApp.Bl
         ICollection<Reviewer> GetReviewers();
         Reviewer GetReviewer(int reviewerId);
         ICollection<Review> GetReviewsByReviewer(int reviewerId);
-        bool ReviewerExists(int reviewerId);
+        bool ReviewerExists(int reviewerId); 
+        bool CreateReviewer(Reviewer reviewer);
+        bool save();
     }
     public class ReviewerRepository : IReviewerRepository
     {
@@ -18,6 +20,13 @@ namespace PokemonReviewApp.Bl
         {
             _context = context;
         }
+
+        public bool CreateReviewer(Reviewer reviewer)
+        {
+            _context.Add(reviewer);
+            return save();
+        }
+
         public Reviewer GetReviewer(int reviewerId)
         {
             //return _context.Reviewers.FirstOrDefault(x => x.Id == reviewerId);
@@ -38,6 +47,12 @@ namespace PokemonReviewApp.Bl
         public bool ReviewerExists(int reviewerId)
         {
             return _context.Reviewers.Any(x => x.Id == reviewerId);
+        }
+
+        public bool save()
+        {
+            var saved = _context.SaveChanges();
+            return saved > 0 ? true : false;
         }
     }
 }
